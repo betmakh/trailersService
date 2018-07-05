@@ -1,0 +1,16 @@
+const webpack = require('webpack'),
+    webpackConfig = require('../webpack.config');
+
+const compiler = webpack(typeof webpackConfig === 'object' ? webpackConfig : webpackConfig());
+
+require('nodemon')('bin/www');
+compiler.watch(
+    {
+        aggregateTimeout: 300,
+        poll: 1000
+    },
+    (err, stats) => {
+        console.log(stats.toString({colors:'true'}));
+    }
+);
+// require('../main.js');

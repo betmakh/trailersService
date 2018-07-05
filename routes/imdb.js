@@ -1,16 +1,26 @@
 var express = require('express');
 var router = express.Router();
+ 
+var imdbClien = require('../utils/imdbClient');
 
-var getClient = require('../utils/imdbClient');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    var client = getClient();
-    client.get({'id': 'tt3896198'}).then(data => {
-        res.json(data);
-    }).catch(console.error);
+router.get('/', function(req, res) {
+    var query = req.param('query');
+    var id = req.param('id');
 
-    // res.render('index', { title: 'Express' });
+    if (query) {
+        imdbClien.search(query).then(data => {
+            res.json(data);
+        }).catch(err => res.status(500).send(err));
+    } else if (id) {
+        imdbClien.get(id).then(data => {
+            res.json(data);
+        }).catch(err => res.status(500).send(err));
+    } else {
+        res.sendStatus(500);
+    }
+
 });
 
 module.exports = router;
