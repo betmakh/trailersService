@@ -40,6 +40,11 @@ class FilmsContainer extends React.Component {
                                     <Typography variant="body1" gutterBottom>
                                         {filmData.Year}
                                     </Typography>
+                                    <Typography variant="caption" gutterBottom align="center">
+                                        <a href={'https://www.youtube.com/watch?v=' + filmData.trailer.id.videoId}>
+                                            watch trailer
+                                        </a>
+                                    </Typography>
                                 </Grid>
                             </Grid>
                         </Paper>

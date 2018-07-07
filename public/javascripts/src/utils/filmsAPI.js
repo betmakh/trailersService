@@ -1,7 +1,7 @@
 const URL = '/imdb?';
 
 export const searchFilms = query => {
-    return window.fetch(`${URL}query=${query}`).then(response => response.json());
+    return window.fetch(`${URL}query=${query}`).then(response => (response.ok ? response.json() : null));
 };
 
 export const getFilm = id => {

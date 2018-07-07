@@ -21,7 +21,7 @@ class Layout extends React.Component {
     updateQuery(query) {
         console.log('query', query);
         if (query && query.trim().length > 2) {
-            searchFilms(query).then(data => this.setState({ filmsList: data.Search }));
+            searchFilms(query).then(data => this.setState({ filmsList: data }));
         }
     }
 

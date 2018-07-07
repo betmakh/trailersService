@@ -18,7 +18,9 @@ module.exports = {
                         s: query
                     })
                 )
-        ).then(response => (response.ok ? response.json() : response.error())),
+        )
+            .then(response => (response.ok ? response.json() : response.error()))
+            .then(data => (data.Search ? data.Search : data)),
     get: id => {
         var url =
             IMDB_API_URL +
@@ -28,6 +30,6 @@ module.exports = {
                     i: id
                 })
             );
-        return fetch(url).then(response => response.ok ? response.json() : response.error());
+        return fetch(url).then(response => (response.ok ? response.json() : response.error()));
     }
 };
