@@ -16,7 +16,8 @@
     ],
     "globals": {
         "__dirname": false,
-        "document":true
+        "document":true,
+        "window": true
     },
     "rules": {
         "indent": [
