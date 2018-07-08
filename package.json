@@ -5,7 +5,8 @@
   "scripts": {
     "start": "webpack && node ./bin/www",
     "startDev": "node ./bin/dev",
-    "cleanCache": "rm -rf ./store.json"
+    "cleanCache": "rm -rf ./store.json",
+    "linter": "eslint ./"
   },
   "nodemonConfig": {
     "ignore": ["public/**/*", "store.json"]
@@ -36,7 +37,7 @@
   },
   "devDependencies": {
     "debug": "~2.6.9",
-    "eslint": "^5.0.1",
+    "eslint": "^5.1.0",
     "eslint-plugin-react": "^7.10.0",
     "nodemon": "^1.17.5",
     "webpack-cli": "^3.0.8"

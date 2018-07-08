@@ -6,7 +6,7 @@ module.exports = {
     entry: './public/javascripts/src/app.js',
     mode: 'development',
     output: {
-        filename: 'app.js',
+        filename: 'app.build.js',
         path: distFolder,
         publicPath: distFolder + '/'
     },

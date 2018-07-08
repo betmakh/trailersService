@@ -19,6 +19,7 @@
         "fetch": false
     },
     "rules": {
+        "no-console": ["error", { "allow": ["warn", "error", "time", "timeEnd"] }],
         "indent": ["error", 4],
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "single"],

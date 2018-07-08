@@ -12,7 +12,6 @@ module.exports = {
         } else {
             console.time(key);
             return requestProcessFunction().then(data => {
-                console.log('data requested for cache');
                 console.timeEnd(key);
                 cache.set(key, data);
                 return data;

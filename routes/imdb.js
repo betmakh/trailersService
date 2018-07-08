@@ -10,14 +10,13 @@ router.get('/', function(req, res) {
     var id = req.query['id'];
 
     if (query) {
-        console.log('query', query);
         trailersExtractor
             .searchTrailers(query)
             .then(data => {
                 res.json(data);
             })
             .catch(err => {
-                console.log('err', err);
+                console.error(err);
                 return res.status(500).send(err);
             });
     } else if (id) {
