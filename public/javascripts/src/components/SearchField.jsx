@@ -1,7 +1,4 @@
 import React from 'react';
-// import { render } from 'react-dom';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 
@@ -10,10 +7,6 @@ class SearchField extends React.Component {
         super(props);
     }
     onInput(event) {
-        // this.setState({
-        //     query: event.target.value
-        // });
-
         this.props.onUpdateQuery(event.target.value);
     }
     render() {

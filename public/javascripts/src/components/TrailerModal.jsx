@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
+import { FacebookShareButton, TwitterShareButton, RedditShareButton, FacebookIcon, TwitterIcon } from 'react-share';
 
 const YOUTUBE_VIDEO_PREFIX = 'https://www.youtube.com/embed/';
 
@@ -19,6 +20,15 @@ function getModalStyle() {
 }
 
 const styles = theme => ({
+    shareWrapper: {
+        textAlign: 'right'
+    },
+    shareButton: {
+        display: 'inline-block',
+        outline: 'none',
+        marginLeft: theme.spacing.unit,
+        cursor: 'pointer'
+    },
     paper: {
         position: 'absolute',
         width: theme.spacing.unit * 50,
@@ -29,13 +39,9 @@ const styles = theme => ({
 });
 
 class TrailerModal extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.handleClose = this.handleClose.bind(this);
-    // }
-
     render() {
-        const { classes, isModalOpen, videoId, handleClose } = this.props;
+        var { classes, isModalOpen, videoId, handleClose } = this.props,
+            videoURL = YOUTUBE_VIDEO_PREFIX + videoId;
 
         return (
             <Modal
@@ -55,12 +61,25 @@ class TrailerModal extends React.Component {
                             allowFullScreen
                         />
                     )}
-                    <Typography variant="title" id="modal-title">
-                        Text in a modal
-                    </Typography>
-                    <Typography variant="subheading" id="simple-modal-description">
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </Typography>
+                    <br />
+                    <br />
+
+                    <div className={classes.shareWrapper}>
+                        <Typography variant="caption" gutterBottom>
+                            Share trailer:
+                        </Typography>
+                        <FacebookShareButton url={videoURL} className={classes.shareButton}>
+                            <FacebookIcon size={32} round={true} />
+                        </FacebookShareButton>
+                        <TwitterShareButton url={videoURL} className={classes.shareButton}>
+                            <TwitterIcon size={32} round={true} />
+                        </TwitterShareButton>
+                    </div>
+                    <Button color="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    {/*<RedditShareButton url={videoURL} />*/}
+                    {/*<Button color="primary">Share trailer</Button>*/}
                 </div>
             </Modal>
         );

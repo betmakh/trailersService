@@ -61,3 +61,5 @@ typings/
 .next
 
 store.json
+
+public/javascripts/dist/app.js

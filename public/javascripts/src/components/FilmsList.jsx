@@ -24,7 +24,7 @@ const styles = theme => ({
 
 class FilmsContainer extends React.Component {
     render() {
-        const { classes, openTrailer, filmsData } = this.props;
+        const { classes, openTrailer, filmsData, searchQuery } = this.props;
         return (
             <div>
                 {filmsData && filmsData.length ? (
@@ -70,9 +70,11 @@ class FilmsContainer extends React.Component {
                         </Paper>
                     ))
                 ) : (
-                    <Typography variant="display2" gutterBottom>
-                        No movies found
-                    </Typography>
+                    searchQuery.length > 1 && (
+                        <Typography variant="display2" gutterBottom>
+                            No movies found
+                        </Typography>
+                    )
                 )}
             </div>
         );
@@ -82,7 +84,8 @@ class FilmsContainer extends React.Component {
 FilmsContainer.propTypes = {
     filmsData: PropTypes.array,
     openTrailer: PropTypes.func.isRequired,
-    classes: PropTypes.object
+    classes: PropTypes.object,
+    searchQuery: PropTypes.string
 };
 
 export default withStyles(styles)(FilmsContainer);

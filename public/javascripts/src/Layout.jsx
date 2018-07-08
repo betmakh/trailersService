@@ -16,7 +16,8 @@ class Layout extends React.Component {
             filmsList: null,
             trailerId: '',
             isModalOpen: false,
-            isLoading: false
+            isLoading: false,
+            searchQuery: ''
         };
         this.updateQuery = _.debounce(this.updateQuery.bind(this), 300);
         this.openTrailerModal = this.openTrailerModal.bind(this);
@@ -25,6 +26,7 @@ class Layout extends React.Component {
     updateQuery(query) {
         if (query && query.trim().length > 2) {
             this.setState({
+                searchQuery: query,
                 isLoading: true
             });
             searchFilms(query).then(data => this.setState({ filmsList: data, isLoading: false }));
@@ -56,7 +58,11 @@ class Layout extends React.Component {
                         {this.state.isLoading ? (
                             <LinearProgress variant="query" />
                         ) : (
-                            <FilmsList filmsData={this.state.filmsList} openTrailer={this.openTrailerModal} />
+                            <FilmsList
+                                filmsData={this.state.filmsList}
+                                searchQuery={this.state.searchQuery}
+                                openTrailer={this.openTrailerModal}
+                            />
                         )}
                     </Grid>
                 </Grid>
