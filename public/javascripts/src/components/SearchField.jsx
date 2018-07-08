@@ -17,7 +17,7 @@ class SearchField extends React.Component {
         this.props.onUpdateQuery(event.target.value);
     }
     render() {
-        return <TextField label="Search movie" onChange={this.onInput.bind(this)} margin="normal" />;
+        return <TextField fullWidth label="Search movie" onChange={this.onInput.bind(this)} margin="normal" />;
     }
 }
 

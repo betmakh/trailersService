@@ -1,23 +1,22 @@
 import React from 'react';
-// import { render } from 'react-dom';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import _ from 'lodash';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import SearchField from './components/SearchField.jsx';
 import FilmsList from './components/FilmsList.jsx';
 import TrailerModal from './components/TrailerModal.jsx';
 import { searchFilms } from './utils/filmsAPI';
 
-// import { withStyles } from '@material-ui/core/styles';
-
 class Layout extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            filmsList: [],
+            filmsList: null,
             trailerId: '',
-            isModalOpen: false
+            isModalOpen: false,
+            isLoading: false
         };
         this.updateQuery = _.debounce(this.updateQuery.bind(this), 300);
         this.openTrailerModal = this.openTrailerModal.bind(this);
@@ -25,13 +24,14 @@ class Layout extends React.Component {
     }
     updateQuery(query) {
         if (query && query.trim().length > 2) {
-            searchFilms(query).then(data => this.setState({ filmsList: data }));
+            this.setState({
+                isLoading: true
+            });
+            searchFilms(query).then(data => this.setState({ filmsList: data, isLoading: false }));
         }
     }
     openTrailerModal(id) {
         return () => {
-            console.log('id', id);
-            console.log('this', this);
             this.setState({ trailerId: id, isModalOpen: true });
         };
     }
@@ -44,10 +44,20 @@ class Layout extends React.Component {
             <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
+                        {' '}
+                        <Typography variant="display3" gutterBottom>
+                            Search movie trailers here!
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
                         <SearchField onUpdateQuery={this.updateQuery} />
                     </Grid>
                     <Grid item xs={12}>
-                        <FilmsList filmsData={this.state.filmsList} openTrailer={this.openTrailerModal} />
+                        {this.state.isLoading ? (
+                            <LinearProgress variant="query" />
+                        ) : (
+                            <FilmsList filmsData={this.state.filmsList} openTrailer={this.openTrailerModal} />
+                        )}
                     </Grid>
                 </Grid>
                 <TrailerModal

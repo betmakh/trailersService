@@ -10,6 +10,7 @@ router.get('/', function(req, res) {
     var id = req.query['id'];
 
     if (query) {
+        console.log('query', query);
         trailersExtractor
             .searchTrailers(query)
             .then(data => {

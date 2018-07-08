@@ -1,23 +1,27 @@
 const imdbClient = require('./imdbClient');
 const youtubeClient = require('./youtubeClient');
+const _ = require('lodash');
 
 const searchTrailers = query =>
     imdbClient.search(query).then(data => {
         if (data.length) {
-            var youtubeDataPromises = data.map(movie => youtubeClient.searchTrailer(movie.Title));
+            var trailers,
+                youtubeDataPromises = data.map(movie => youtubeClient.searchTrailer(movie.Title)),
+                moviesDataPromises = data.map(movie => imdbClient.get(movie.imdbID));
             return Promise.all(youtubeDataPromises)
-                .then(searchTrailerResult => ({
-                    trailers: searchTrailerResult,
-                    movies: data
-                }))
-                .then(data => {
+                .then(youtubeData => {
+                    trailers = youtubeData;
+                    return Promise.all(moviesDataPromises);
+                })
+                .then(moviesData => {
                     var result = [];
-                    data.movies.forEach((el, index) => {
-                        el.trailer = data.trailers[index];
-                        result.push(el);
+                    data.forEach((el, index) => {
+                        el.trailer = trailers[index];
+                        result.push(_.merge(el, moviesData[index]));
                     });
                     return result;
-                });
+                })
+                .catch(console.error);
         } else {
             return [];
         }

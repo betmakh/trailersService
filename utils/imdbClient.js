@@ -1,35 +1,44 @@
 const fetch = require('node-fetch');
 const querystring = require('querystring');
+const { processRequestCache } = require('./cache');
+
 const { IMDB_API_KEY, IMDB_API_URL } = require('./constants');
 
-// cli.get({'name': 'The Toxic Avenger'}).then(console.log);
-
 var initialQueryPrams = {
-    apikey: IMDB_API_KEY
+    apikey: IMDB_API_KEY,
+    type: 'movie'
 };
 
 module.exports = {
     search: query =>
-        fetch(
-            IMDB_API_URL +
-                '?' +
-                querystring.stringify(
-                    Object.assign({}, initialQueryPrams, {
-                        s: query
-                    })
-                )
-        )
-            .then(response => (response.ok ? response.json() : response.error()))
-            .then(data => (data.Search ? data.Search : data)),
-    get: id => {
-        var url =
-            IMDB_API_URL +
-            '?' +
-            querystring.stringify(
-                Object.assign({}, initialQueryPrams, {
-                    i: id
+        processRequestCache(query, () => {
+            return fetch(
+                IMDB_API_URL +
+                    '?' +
+                    querystring.stringify(
+                        Object.assign({}, initialQueryPrams, {
+                            s: query
+                        })
+                    )
+            )
+                .then(response => {
+                    return response.ok ? response.json() : {};
                 })
-            );
-        return fetch(url).then(response => (response.ok ? response.json() : response.error()));
-    }
+                .then(data => (data.Search ? data.Search : []))
+                .catch(err => console.error(err));
+        }),
+    get: id =>
+        processRequestCache(id, () =>
+            fetch(
+                IMDB_API_URL +
+                    '?' +
+                    querystring.stringify(
+                        Object.assign({}, initialQueryPrams, {
+                            i: id
+                        })
+                    )
+            )
+                .then(response => (response.ok ? response.json() : {}))
+                .catch(console.error)
+        )
 };

@@ -13,6 +13,9 @@ const styles = theme => ({
         maxWidth: '100%',
         height: 300
     },
+    iconSpace: {
+        marginLeft: theme.spacing.unit
+    },
     paperBlock: {
         padding: theme.spacing.unit * 2,
         marginBottom: theme.spacing.unit
@@ -21,11 +24,11 @@ const styles = theme => ({
 
 class FilmsContainer extends React.Component {
     render() {
-        const { classes, openTrailer } = this.props;
+        const { classes, openTrailer, filmsData } = this.props;
         return (
             <div>
-                {this.props.filmsData ? (
-                    this.props.filmsData.map(filmData => (
+                {filmsData && filmsData.length ? (
+                    filmsData.map(filmData => (
                         <Paper key={filmData.imdbID} className={classes.paperBlock}>
                             <Grid container spacing={24}>
                                 <Grid item xs={4}>
@@ -39,9 +42,16 @@ class FilmsContainer extends React.Component {
                                     <Typography variant="display1" gutterBottom>
                                         {filmData.Title}
                                     </Typography>
+                                    <Typography variant="caption" gutterBottom>
+                                        {filmData.Rated} | {filmData.Runtime} | {filmData.Genre} | {filmData.Released} ({filmData.Country})
+                                    </Typography>
                                     <Typography variant="body1" gutterBottom>
                                         {filmData.Year}
                                     </Typography>
+                                    <Typography variant="caption" gutterBottom>
+                                        {filmData.Plot}
+                                    </Typography>
+                                    <br />
                                     {filmData.trailer ? (
                                         <Button
                                             size="medium"
@@ -50,7 +60,7 @@ class FilmsContainer extends React.Component {
                                             onClick={openTrailer(filmData.trailer.id.videoId)}
                                         >
                                             Watch trailer
-                                            <MovieIcon />
+                                            <MovieIcon className={classes.iconSpace} />
                                         </Button>
                                     ) : (
                                         'No trailer'
@@ -60,7 +70,7 @@ class FilmsContainer extends React.Component {
                         </Paper>
                     ))
                 ) : (
-                    <Typography variant="display3" gutterBottom>
+                    <Typography variant="display2" gutterBottom>
                         No movies found
                     </Typography>
                 )}
