@@ -2,11 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 var trailersExtractor = require('../utils/trailersExtractor');
+var imdbClient = require('../utils/imdbClient');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    var query = req.param('query');
-    var id = req.param('id');
+    var query = req.query['query'];
+    var id = req.query['id'];
 
     if (query) {
         trailersExtractor
@@ -19,7 +20,7 @@ router.get('/', function(req, res) {
                 return res.status(500).send(err);
             });
     } else if (id) {
-        trailersExtractor
+        imdbClient
             .get(id)
             .then(data => {
                 res.json(data);

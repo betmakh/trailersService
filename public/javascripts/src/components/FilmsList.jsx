@@ -5,6 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import MovieIcon from '@material-ui/icons/Movie';
 
 const styles = theme => ({
     poster: {
@@ -19,7 +21,7 @@ const styles = theme => ({
 
 class FilmsContainer extends React.Component {
     render() {
-        const { classes } = this.props;
+        const { classes, openTrailer } = this.props;
         return (
             <div>
                 {this.props.filmsData ? (
@@ -40,11 +42,19 @@ class FilmsContainer extends React.Component {
                                     <Typography variant="body1" gutterBottom>
                                         {filmData.Year}
                                     </Typography>
-                                    <Typography variant="caption" gutterBottom align="center">
-                                        <a href={'https://www.youtube.com/watch?v=' + filmData.trailer.id.videoId}>
-                                            watch trailer
-                                        </a>
-                                    </Typography>
+                                    {filmData.trailer ? (
+                                        <Button
+                                            size="medium"
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={openTrailer(filmData.trailer.id.videoId)}
+                                        >
+                                            Watch trailer
+                                            <MovieIcon />
+                                        </Button>
+                                    ) : (
+                                        'No trailer'
+                                    )}
                                 </Grid>
                             </Grid>
                         </Paper>
@@ -61,6 +71,7 @@ class FilmsContainer extends React.Component {
 
 FilmsContainer.propTypes = {
     filmsData: PropTypes.array,
+    openTrailer: PropTypes.func.isRequired,
     classes: PropTypes.object
 };
 
