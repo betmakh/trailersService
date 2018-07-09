@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var misspellings = require('misspellings');
 
 var trailersExtractor = require('../utils/trailersExtractor');
 var imdbClient = require('../utils/imdbClient');
@@ -14,6 +15,8 @@ router.get('/', function(req, res) {
         trailersExtractor
             .searchTrailers({ query, page })
             .then(data => {
+                var corrections = misspellings.correctWordsFor(query);
+                data.corrections = corrections;
                 res.json(data);
             })
             .catch(err => {

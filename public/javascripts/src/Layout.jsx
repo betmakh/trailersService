@@ -89,7 +89,10 @@ class Layout extends React.Component {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <SearchField onUpdateQuery={this.updateQuery} />
+                        <SearchField
+                            onUpdateQuery={this.updateQuery}
+                            corrections={filmsData && filmsData.corrections}
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         {!isLoading && totalResults ? (
