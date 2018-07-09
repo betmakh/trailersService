@@ -67,7 +67,7 @@ class Layout extends React.Component {
     }
 
     render() {
-        var { filmsData, searchQuery, isLoading } = this.state;
+        var { filmsData, searchQuery, isLoading, trailerId, isModalOpen } = this.state;
         var totalResults = filmsData && Number(filmsData.totalResults);
         var showMoreButton = null;
         if (filmsData && filmsData.Search && totalResults > filmsData.Search.length) {
@@ -109,11 +109,7 @@ class Layout extends React.Component {
                     </Grid>
                     {showMoreButton}
                 </Grid>
-                <TrailerModal
-                    videoId={this.state.trailerId}
-                    isModalOpen={this.state.isModalOpen}
-                    handleClose={this.closeModal}
-                />
+                <TrailerModal videoId={trailerId} isModalOpen={isModalOpen} handleClose={this.closeModal} />
             </div>
         );
     }
