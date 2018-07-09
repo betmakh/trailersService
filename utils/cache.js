@@ -6,6 +6,9 @@ var cache = require('node-file-cache').create({ life: CACHE_TIME });
 module.exports = {
     cache: cache,
     processRequestCache: (key, requestProcessFunction) => {
+        if (typeof key === 'object') {
+            key = JSON.stringify(key);
+        }
         var cacheData = cache.get(key);
         if (cacheData) {
             return Promise.resolve(cacheData);

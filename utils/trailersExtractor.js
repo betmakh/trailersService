@@ -2,8 +2,9 @@ const imdbClient = require('./imdbClient');
 const youtubeClient = require('./youtubeClient');
 const _ = require('lodash');
 
-const searchTrailers = query =>
-    imdbClient.search(query).then(data => {
+const searchTrailers = params =>
+    imdbClient.search(params).then(response => {
+        var data = response.Search || [];
         if (data.length) {
             var trailers,
                 youtubeDataPromises = data.map(movie => youtubeClient.searchTrailer(movie.Title)),
@@ -19,11 +20,12 @@ const searchTrailers = query =>
                         el.trailer = trailers[index];
                         result.push(_.merge(el, moviesData[index]));
                     });
-                    return result;
+                    response.Search = result;
+                    return response;
                 })
                 .catch(console.error);
         } else {
-            return [];
+            return { message: 'no movies found' };
         }
     });
 

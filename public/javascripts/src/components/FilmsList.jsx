@@ -24,10 +24,11 @@ const styles = theme => ({
 
 class FilmsContainer extends React.Component {
     render() {
-        const { classes, openTrailer, filmsData, searchQuery } = this.props;
+        const { classes, openTrailer, filmsData } = this.props;
         return (
             <div>
-                {filmsData && filmsData.length ? (
+                {filmsData &&
+                    filmsData.length &&
                     filmsData.map(filmData => (
                         <Paper key={filmData.imdbID} className={classes.paperBlock}>
                             <Grid container spacing={24}>
@@ -68,14 +69,7 @@ class FilmsContainer extends React.Component {
                                 </Grid>
                             </Grid>
                         </Paper>
-                    ))
-                ) : (
-                    searchQuery.length > 1 && (
-                        <Typography variant="display2" gutterBottom>
-                            No movies found
-                        </Typography>
-                    )
-                )}
+                    ))}
             </div>
         );
     }
@@ -84,8 +78,7 @@ class FilmsContainer extends React.Component {
 FilmsContainer.propTypes = {
     filmsData: PropTypes.array,
     openTrailer: PropTypes.func.isRequired,
-    classes: PropTypes.object,
-    searchQuery: PropTypes.string
+    classes: PropTypes.object
 };
 
 export default withStyles(styles)(FilmsContainer);

@@ -10,22 +10,35 @@ var initialQueryPrams = {
 };
 
 module.exports = {
-    search: query =>
-        processRequestCache(query, () => {
-            return fetch(
+    search: params =>
+        processRequestCache(params, () => {
+            var url =
                 IMDB_API_URL +
-                    '?' +
-                    querystring.stringify(
-                        Object.assign({}, initialQueryPrams, {
-                            s: query
-                        })
-                    )
-            )
-                .then(response => {
-                    return response.ok ? response.json() : {};
-                })
-                .then(data => (data.Search ? data.Search : []))
-                .catch(err => console.error(err));
+                '?' +
+                querystring.stringify(
+                    Object.assign({}, initialQueryPrams, {
+                        s: params.query,
+                        page: params.page || 1
+                    })
+                );
+            console.log('url', url);
+            return (
+                fetch(
+                    IMDB_API_URL +
+                        '?' +
+                        querystring.stringify(
+                            Object.assign({}, initialQueryPrams, {
+                                s: params.query,
+                                page: params.page || 1
+                            })
+                        )
+                )
+                    .then(response => {
+                        return response.ok ? response.json() : {};
+                    })
+                    // .then(data => (data.Search ? data.Search : []))
+                    .catch(err => console.error(err))
+            );
         }),
     get: id =>
         processRequestCache(id, () =>

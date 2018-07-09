@@ -2,7 +2,9 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import _ from 'lodash';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
 
 import SearchField from './components/SearchField.jsx';
 import FilmsList from './components/FilmsList.jsx';
@@ -13,11 +15,12 @@ class Layout extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            filmsList: null,
+            filmsData: null,
             trailerId: '',
             isModalOpen: false,
             isLoading: false,
-            searchQuery: ''
+            searchQuery: '',
+            page: 1
         };
         this.updateQuery = _.debounce(this.updateQuery.bind(this), 300);
         this.openTrailerModal = this.openTrailerModal.bind(this);
@@ -27,10 +30,32 @@ class Layout extends React.Component {
         if (query && query.trim().length > 2) {
             this.setState({
                 searchQuery: query,
-                isLoading: true
+                isLoading: true,
+                filmsData: null,
+                page: 1
             });
-            searchFilms(query).then(data => this.setState({ filmsList: data, isLoading: false }));
+            this.requestMovies(query, 1);
         }
+    }
+    requestMovies(query = this.state.searchQuery, page = this.state.page) {
+        this.setState({
+            isLoading: true
+        });
+        searchFilms(query, page).then(data => {
+            var { filmsData } = this.state;
+
+            if (filmsData && data.Search && filmsData.Search && filmsData.Search.length) {
+                filmsData.Search = filmsData.Search.concat(data.Search);
+            } else {
+                filmsData = data;
+            }
+            this.setState({ filmsData, isLoading: false });
+        });
+    }
+    loadMore() {
+        var page = this.state.page + 1;
+        this.setState({ page });
+        this.requestMovies(undefined, page);
     }
     openTrailerModal(id) {
         return () => {
@@ -42,6 +67,18 @@ class Layout extends React.Component {
     }
 
     render() {
+        var { filmsData, searchQuery, isLoading } = this.state;
+        var totalResults = filmsData && Number(filmsData.totalResults);
+        var showMoreButton = null;
+        if (filmsData && filmsData.Search && totalResults > filmsData.Search.length) {
+            showMoreButton = (
+                <Grid item xs={12} style={{ textAlign: 'center' }}>
+                    <Button onClick={this.loadMore.bind(this)} variant="contained" color="primary" size="large">
+                        Load more results <RefreshIcon />
+                    </Button>
+                </Grid>
+            );
+        }
         return (
             <div>
                 <Grid container spacing={24}>
@@ -55,16 +92,22 @@ class Layout extends React.Component {
                         <SearchField onUpdateQuery={this.updateQuery} />
                     </Grid>
                     <Grid item xs={12}>
-                        {this.state.isLoading ? (
-                            <LinearProgress variant="query" />
+                        {!isLoading && totalResults ? (
+                            <Typography variant="display1" gutterBottom>
+                                Total movies found: {totalResults}
+                            </Typography>
                         ) : (
-                            <FilmsList
-                                filmsData={this.state.filmsList}
-                                searchQuery={this.state.searchQuery}
-                                openTrailer={this.openTrailerModal}
-                            />
+                            searchQuery &&
+                            !isLoading && (
+                                <Typography variant="display2" gutterBottom>
+                                    No movies found
+                                </Typography>
+                            )
                         )}
+                        <FilmsList filmsData={filmsData && filmsData.Search} openTrailer={this.openTrailerModal} />
+                        {isLoading && <LinearProgress variant="query" />}
                     </Grid>
+                    {showMoreButton}
                 </Grid>
                 <TrailerModal
                     videoId={this.state.trailerId}

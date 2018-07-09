@@ -7,11 +7,12 @@ var imdbClient = require('../utils/imdbClient');
 /* GET home page. */
 router.get('/', function(req, res) {
     var query = req.query['query'];
+    var page = req.query['page'] || 1;
     var id = req.query['id'];
 
     if (query) {
         trailersExtractor
-            .searchTrailers(query)
+            .searchTrailers({ query, page })
             .then(data => {
                 res.json(data);
             })
